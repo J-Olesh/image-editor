@@ -23,3 +23,7 @@ This results in a 'smoothing' effect.
 #### 100 Iterations:
 <img src="https://github.com/user-attachments/assets/27c3232f-3607-4475-aaa9-d8a42403a72a" width=300 height=300>
 
+#### 5000 Iterations:
+<img src="https://github.com/user-attachments/assets/dca4a7ed-0474-4b7c-a7a6-ee47bd05d400" width=300 height=300>
+
+Note that using a high iteration value can result in the process taking several minutes when dealing with ~3000x3000 pixel images.
