@@ -25,27 +25,6 @@ int distance3d(int r1, int g1, int b1, int r2, int g2, int b2)
     int bSqr = (b1 - b2) * (b1 - b2);
     return sqrt(rSqr + gSqr + bSqr);
 }
-int getPadding(int width)
-{
-
-    if (width % 4 == 0)
-    {
-        return 0;
-    }
-    if ((width + 1) % 4 == 0)
-    {
-
-        return 1;
-    }
-    if ((width + 2) % 4 == 0)
-    {
-        return 2;
-    }
-    else
-    {
-        return 3;
-    }
-}
 
 void Bitmap::readHeaders(char data[])
 {
@@ -109,7 +88,6 @@ Bitmap::Bitmap(string path)
     int widthInBytes = _width * BYTES_PER_PIXEL;
     int paddingSize = (4 - (widthInBytes) % 4) % 4;
     cout << "widthinBytes:  " << widthInBytes << endl;
-    cout << "padding size: " << paddingSize << endl;
     inputFile.seekg(_dataOffset);
 
     _pixels.resize(_width * _height);
@@ -135,9 +113,8 @@ void Bitmap::saveImage(string path)
     int widthInBytes = _width * BYTES_PER_PIXEL;
     unsigned char padding[3] = {0, 0, 0};
 
-    int paddingSize = (4 - (widthInBytes) % 4) % 4; // getPadding(widthInBytes);
+    int paddingSize = (4 - (widthInBytes) % 4) % 4;
     int stride = (widthInBytes) + paddingSize;
-    cout << "padding size: " << paddingSize << endl;
     FILE *imageFile = fopen(path.c_str(), "wb");
 
     unsigned char *fileHeader = createBitmapFileHeader(_height, stride);
@@ -313,7 +290,7 @@ void Bitmap::recolour()
         }
     }
 }
-// There is a bug with this one: the
+// flips rows horizontally. skip param means every nth row will be flipped instead.
 void Bitmap::flipRows(int skip = 0)
 {
     int midpoint;
@@ -325,16 +302,23 @@ void Bitmap::flipRows(int skip = 0)
     {
         midpoint = (_width / 2) - 1;
     }
+
     for (int row = 0; row < _height; row++)
     {
         for (int position = 0; position < midpoint; position++)
         {
-            // int currentIndex = (row * _width) + position;
-            // int endOfRow = (row * _width) + _width - 1;
-            // int mirrorIndex = endOfRow - currentIndex;
-            // RgbPixel *px = &_pixels[currentIndex];
-            // RgbPixel *swapTarget = &_pixels[mirrorIndex];
-            // px->r += 120;
+            int mirrorIndex = _width - position;
+
+            RgbPixel *px = &_pixels[row * _width + position];
+            RgbPixel *swapTarget = &_pixels[row * _width + mirrorIndex];
+            RgbPixel temp = *swapTarget;
+
+            swapTarget->r = px->r;
+            swapTarget->g = px->g;
+            swapTarget->b = px->b;
+            px->r = temp.r;
+            px->g = temp.g;
+            px->b = temp.b;
         }
         row += skip;
     }

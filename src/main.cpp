@@ -1,10 +1,5 @@
 
-#include <stdio.h>
-#include <cmath>
-#include <cstdint>
-#include <fstream>
-#include <iostream>
-#include <vector>
+
 #include "bitmap.hpp"
 
 int main()
@@ -15,9 +10,8 @@ int main()
     The input image MUST be a 24-bit .bmp, 32-bit will not work.
     */
     Bitmap test("./input_images/testImage.bmp");
-    // // bm.glitch(1);
-    // // bm.flipRows(0);
-
-    // //  bm.recolour();
+    // test.glitch(1);
+    // test.flipRows(0);
+    // test.recolour();
     test.saveImage("../out/output.bmp");
 }
